@@ -6,7 +6,7 @@
   "main": "serverless.ts",
   "scripts": {
     "build": "tsc --skipLibCheck --project tsconfig.json && echo tsc ok",
-    "start": "$(npm bin)/sls offline start",
+    "start": "node_modules/.bin/sls offline start",
     "test": "jest --testRegex=test/*/.*.unit.spec.ts",
     "test:int": "jest --setupFiles ./jest.setup.js --testRegex=test/*/.*.int.spec.ts --detectOpenHandles",
     "test:one": "jest --setupFiles ./jest.setup.js --detectOpenHandles --testRegex=$npm_config_first"
