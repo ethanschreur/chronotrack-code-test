@@ -1,6 +1,6 @@
 # code-test
 
-Requires [node+npm](https://github.com/nvm-sh/nvm#intro) and [docker](https://www.docker.com/products/docker-desktop) installed.
+Requires [docker](https://www.docker.com/products/docker-desktop) and [node+npm](https://github.com/nvm-sh/nvm#intro) (versions 12-14) installed.
 
 The full-stack solution in this repo was just demonstrated to a select group of stakeholders and key customers to much acclaim. This includes:
 * a modern UI built on idiomatic React and opinionated Redux
@@ -62,5 +62,34 @@ docker-compose logs -f
 - [ ] Finally, commit and push your changes to a [**NEW** private github repository](https://github.com/new) (**NOT a fork of the BazuSports/code-test repository, please, since this would be automatically deleted when we revoke your Read access**) and provide access to [BazuSports](https://github.com/BazuSports) for review.
 
 ## troubleshooting
-* if `npm install` fails with something like `ERESOLVE could not resolve` try moving or deleting (create a backup first!) your `~/.npm` directory and/or `~/.npmrc` then re-running the command.
+* Candidates have experienced the following issue when using versions 15 or later of node, which can be avoided by downgrading to version 14:
+```
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE could not resolve
+npm ERR! 
+npm ERR! While resolving: ts-jest@27.1.3
+npm ERR! Found: @types/jest@26.0.24
+npm ERR! node_modules/@types/jest
+npm ERR!   dev @types/jest@"^26.0.23" from the root project
+npm ERR! 
+npm ERR! Could not resolve dependency:
+npm ERR! peerOptional @types/jest@"^27.0.0" from ts-jest@27.1.3
+npm ERR! node_modules/ts-jest
+npm ERR!   dev ts-jest@"^27.0.3" from the root project
+npm ERR! 
+npm ERR! Conflicting peer dependency: @types/jest@27.4.1
+npm ERR! node_modules/@types/jest
+npm ERR!   peerOptional @types/jest@"^27.0.0" from ts-jest@27.1.3
+npm ERR!   node_modules/ts-jest
+npm ERR!     dev ts-jest@"^27.0.3" from the root project
+```
+* Otherwise if `npm install` fails with something like `ERESOLVE could not resolve...` try moving or deleting (create a backup first!) your `~/.npm` directory and/or `~/.npmrc` then re-running the command.
+* Candidates have experienced the following issue using the `mysql:8.0.16` Docker image on Apple M1 processors, which *should* be resolved after we've added the `platform: linux/x86_64` directive to the `api/docker-compose.yml`, but your mileage may vary:
+```
+failed to solve: rpc error: code = Unknown desc = failed to solve with frontend dockerfile.v0: failed to create LLB definition: no match for platform in manifest
+```
+* Candidates have experienced the following issue when running the jest-based integration tests and using the `mysql2` library in lieu of `mysql2/promise`, which was fixed by including `require('iconv-lite').encodingExists('cesu8');` in `api/jest.setup.js`:
+```
+Error: Encoding not recognized: 'cesu8' (searched as: 'cesu8')
+```
 * if you get stuck, please contact us as soon as possible so that we can assist.

@@ -1,3 +1,4 @@
+// HINT: import { getMysqlConnection } from '../lib/mysql'
 
 export type UnrankedResult = {
   bib: string

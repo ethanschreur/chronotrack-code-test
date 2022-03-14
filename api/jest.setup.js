@@ -13,3 +13,6 @@ process.env = {
     REGION: 'us-east-1',
     SERVICE_NAME: 'code-test-api',
 }
+
+// Fixes Error: Encoding not recognized: 'cesu8' (searched as: 'cesu8')
+require('iconv-lite').encodingExists('cesu8');
