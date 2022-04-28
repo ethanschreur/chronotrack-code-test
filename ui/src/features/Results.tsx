@@ -1,34 +1,61 @@
 import React from "react"
-import { useAppSelector } from "../app/hooks";
+import { useEffect, useState } from 'react';
 import { toHhMmSs } from "../time";
-import { selectResults } from "./resultsSlice";
+import resultsApi from "./resultsApi";
+import { RankedResult } from './types';
+import { useAppSelector } from "../app/hooks";
+import { selectResults, updateResults } from "./resultsSlice";
+import { useAppDispatch } from "../app/hooks"
 
-export default () => {
-  const results = useAppSelector(selectResults);
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+const Results = () => {
+  const store = useAppSelector(selectResults);
+  const dispatch = useAppDispatch()
+
+  const fetchData: () => void = async () => {
+    dispatch(updateResults(await resultsApi.getResults()));
+  };
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
-    <div className='results' data-testid='results'>
-      <table>
-        <thead>
-          <tr>
-            <th>Bib</th>
-            <th>Name</th>
-            <th>Time</th>
-            <th>Rank</th>
-          </tr>
-        </thead>
-        <tbody>
-          {results.data.map(x => (
-            <tr key={x.bib}>
-              <td data-testclass='bib'>{x.bib}</td>
-              <td data-testclass='name'>{x.name}</td>
-              <td data-testclass='time'>{toHhMmSs(x.time)}</td>
-              <td data-testclass='rank'>{x.rank}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+      <div className='results' data-testid='results' style={{ width: '100%', maxWidth: 650 }}>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Bib</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Time</TableCell>
+                <TableCell>Rank</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {store.data.map((x: RankedResult) => (
+                <TableRow key={x.bib}>
+                  <TableCell>{x.bib}</TableCell>
+                  <TableCell>{x.name}</TableCell>
+                  <TableCell>{toHhMmSs(x.time)}</TableCell>
+                  <TableCell>{x.rank}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   )
 }
+
+export default Results;
 

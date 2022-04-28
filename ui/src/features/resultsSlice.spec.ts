@@ -1,33 +1,32 @@
 import resultsReducer, {
-  addResult,
+  updateResults,
   INITIAL_STATE,
 } from "./resultsSlice"
-import { UnrankedResult } from './types'
+import { RankedResult } from './types'
 
 describe('results slice', () => {
 
-  it('should have the correct initial state', () => {
+  fit('should have the correct initial state', () => {
     expect(
       resultsReducer(undefined, { type: 'some/bogus/action' })
     ).toEqual(INITIAL_STATE)
   })
 
-  it('should add a result', async () => {
-    const result: UnrankedResult = {
+  it('should update state with new rankings', async () => {
+    const result: RankedResult = {
+      rank: 1,
       bib: `B${Math.round(Math.random() * 100)}`,
       name: `Thing ${Math.round(Math.random() * 10)}`,
       time: Math.round(Math.random() * 1000)
     }
     const actual = resultsReducer(
       undefined,
-      addResult(
-        result
+      updateResults(
+        [result]
       )
     )
-    expect(actual.data).toContainEqual(
-      expect.objectContaining(
-        result
-      )
+    expect(actual.data).toEqual(
+      result
     )
   })
 })

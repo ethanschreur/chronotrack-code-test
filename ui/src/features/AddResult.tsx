@@ -1,27 +1,25 @@
 import React from "react"
 import { useAppDispatch } from "../app/hooks"
 import { toMillis } from "../time"
-import { addResult } from "./resultsSlice"
+import { updateResults } from "./resultsSlice"
+import resultsApi from "./resultsApi";
 
-export default () => {
+const AddResult = () => {
   const dispatch = useAppDispatch()
 
   const [bib, setBib] = React.useState('')
   const [name, setName] = React.useState('')
   const [time, setTime] = React.useState('')
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = e => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     if (bib && name && time) {
       const millis = toMillis(time)
       if (!isNaN(millis)) {
+        const newResults = await resultsApi.addResult({ bib, name, time: millis });
         dispatch(
-          addResult({
-            bib,
-            name,
-            time: millis
-          })
+          updateResults(newResults)
         )
       }
     }
@@ -53,3 +51,6 @@ export default () => {
     </form>
   )
 }
+
+
+export default AddResult;
