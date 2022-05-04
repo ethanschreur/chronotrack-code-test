@@ -1,5 +1,5 @@
 import React from "react"
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toHhMmSs } from "../time";
 import resultsApi from "./resultsApi";
 import { RankedResult } from './types';
@@ -19,13 +19,14 @@ const Results = () => {
   const store = useAppSelector(selectResults);
   const dispatch = useAppDispatch()
 
-  const fetchData: () => void = async () => {
-    dispatch(updateResults(await resultsApi.getResults()));
-  };
+
 
   useEffect(() => {
+    const fetchData: () => void = async () => {
+      dispatch(updateResults(await resultsApi.getResults()));
+    };
     fetchData()
-  }, [])
+  }, [dispatch])
 
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
